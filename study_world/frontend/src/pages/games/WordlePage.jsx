@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Dashboard from "../../components/dashboard/Dashboard";
+import React from "react";
 
 // === FETCH RANDOM 5-LETTER WORD FROM DATAMUSE ===
 const fetchWord = async () => {
@@ -117,18 +117,16 @@ export default function WordlePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start text-white bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 relative">
-      {/* === STICKY DASHBOARD BAR === */}
-      <div className="fixed top-0 left-0 w-full bg-slate-900/70 backdrop-blur-md border-b border-slate-700 z-50">
-        <Dashboard />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-start text-white bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] relative overflow-hidden">
+      {/* === BACKGROUND AURA === */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(62,125,255,0.08),_transparent_70%)] pointer-events-none" />
 
-      {/* === MAIN CONTENT === */}
+      {/* === CONTENT === */}
       <div className="pt-20 flex flex-col items-center w-full">
-        <h1 className="text-3xl font-semibold mb-2 text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.3)]">
+        <h1 className="text-3xl font-semibold mb-2 text-[#9ecbff] drop-shadow-[0_0_8px_rgba(62,125,255,0.3)]">
           wordle 🎯
         </h1>
-        <p className="text-slate-400 italic text-xs mb-4">
+        <p className="text-[#b8cfff]/80 italic text-xs mb-4">
           green = correct • yellow = misplaced • red = absent
         </p>
 
@@ -144,8 +142,8 @@ export default function WordlePage() {
                 {letters.split("").map((letter, i) => (
                   <div
                     key={i}
-                    className={`w-10 h-10 md:w-12 md:h-12 border border-slate-600 flex items-center justify-center text-lg md:text-xl font-semibold rounded-md transition-colors ${
-                      guess ? getTileColor(letter, i, guess) : "bg-slate-700/50"
+                    className={`w-10 h-10 md:w-12 md:h-12 border border-[#233a6e] flex items-center justify-center text-lg md:text-xl font-semibold rounded-md transition-colors ${
+                      guess ? getTileColor(letter, i, guess) : "bg-[#1d2d50]/50"
                     }`}
                   >
                     {letter.toUpperCase()}
@@ -157,13 +155,13 @@ export default function WordlePage() {
         </div>
 
         {errorMsg && (
-          <div className="text-red-400 font-semibold text-xs mb-2 animate-pulse">
+          <div className="text-rose-400 font-semibold text-xs mb-2 animate-pulse">
             {errorMsg}
           </div>
         )}
 
-        {/* === QWERTY KEYBOARD === */}
-        <div className="mt-2 flex flex-col items-center gap-1 md:gap-2">
+        {/* === KEYBOARD === */}
+        <div className="mt-3 flex flex-col items-center gap-1 md:gap-2">
           {[
             ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
             ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
@@ -190,7 +188,7 @@ export default function WordlePage() {
           ))}
         </div>
 
-        {/* === GAME END === */}
+        {/* === GAME RESULT === */}
         {gameStatus !== "playing" && (
           <div className="mt-5 text-center">
             {gameStatus === "won" ? (
@@ -198,7 +196,7 @@ export default function WordlePage() {
                 You guessed it! 🎉
               </p>
             ) : (
-              <p className="text-red-400 text-base font-semibold">
+              <p className="text-rose-400 text-base font-semibold">
                 You lost. The word was{" "}
                 <span className="text-white">{targetWord.toUpperCase()}</span>.
               </p>
@@ -212,9 +210,10 @@ export default function WordlePage() {
           </div>
         )}
 
+        {/* === BACK LINK === */}
         <Link
           to="/games"
-          className="mt-5 mb-8 flex items-center gap-1 text-emerald-300/90 font-medium hover:text-emerald-300 transition-all text-sm"
+          className="mt-6 mb-8 flex items-center gap-1 text-[#9ecbff]/80 font-medium hover:text-[#9ecbff] transition-all text-sm"
         >
           ← back to games room
         </Link>

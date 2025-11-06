@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { evaluate, derivative, simplify, fraction } from "mathjs";
-import Dashboard from "../../components/dashboard/Dashboard";
 import { usePetStats } from "../../utils/stats";
+import React from "react";
 
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -85,10 +85,10 @@ export default function MathPage() {
           const raw = derivative(expr, "x").toString();
           correctDisplay = simplify(raw)
             .toString()
-            .replace(/\*/g, "")      // remove *
-            .replace(/\s*\+\s*/g, " + ") // keep clean plus signs
-            .replace(/\s*-\s*/g, " - ")  // same for minus
-            .replace(/\s*x/g, "x");  // remove space before x
+            .replace(/\*/g, "")
+            .replace(/\s*\+\s*/g, " + ")
+            .replace(/\s*-\s*/g, " - ")
+            .replace(/\s*x/g, "x");
           correctVal = NaN;
         }
 
@@ -102,35 +102,22 @@ export default function MathPage() {
               const match = term.match(/^(\d*)x\^(\d+)$/);
               const matchLinear = term.match(/^(\d*)x$/);
 
-              // Quadratic or higher term
               if (match) {
                 const coef = parseFloat(match[1] || "1");
                 const power = parseFloat(match[2]);
                 const frac = fraction(coef, power + 1);
                 let coefStr;
-                if (frac.d === 1) {
-                  coefStr = frac.n === 1 ? "" : `${frac.n}`;
-                } else {
-                  coefStr = `${frac.n}/${frac.d}`;
-                }
+                if (frac.d === 1) coefStr = frac.n === 1 ? "" : `${frac.n}`;
+                else coefStr = `${frac.n}/${frac.d}`;
                 return `${coefStr}x^${power + 1}`;
-              }
-
-              // Linear term
-              else if (matchLinear) {
+              } else if (matchLinear) {
                 const coef = parseFloat(matchLinear[1] || "1");
                 const frac = fraction(coef, 2);
                 let coefStr;
-                if (frac.d === 1) {
-                  coefStr = frac.n === 1 ? "" : `${frac.n}`;
-                } else {
-                  coefStr = `${frac.n}/${frac.d}`;
-                }
+                if (frac.d === 1) coefStr = frac.n === 1 ? "" : `${frac.n}`;
+                else coefStr = `${frac.n}/${frac.d}`;
                 return `${coefStr}x^2`;
-              }
-
-              // Constant term
-              else if (/^\d+$/.test(term)) {
+              } else if (/^\d+$/.test(term)) {
                 return `${term}x`;
               } else return term;
             })
@@ -152,30 +139,20 @@ export default function MathPage() {
           correctVal = a1 * ((r ** n - 1) / (r - 1));
           correctDisplay = correctVal.toFixed(2);
         }
-      }
-
-      // --- LINEAR EQUATION ---
-      else if (question.includes("x")) {
+      } else if (question.includes("x")) {
         const [a, b, c] = question.match(/\d+/g).map(Number);
         correctVal = (c - b) / a;
         correctDisplay = correctVal.toFixed(4);
-      }
-
-      // --- PERCENTAGE ---
-      else if (question.includes("%")) {
+      } else if (question.includes("%")) {
         const [p, total] = question.match(/\d+/g).map(Number);
         correctVal = (p / 100) * total;
         correctDisplay = correctVal.toFixed(2);
-      }
-
-      // --- BASIC MATH ---
-      else {
+      } else {
         const expr = question.replace(/×/g, "*").replace(/\^/g, "**");
         correctVal = evaluate(expr);
         correctDisplay = correctVal.toFixed(4);
       }
 
-      // --- USER INPUT ---
       let userVal = answer.trim();
       if (/^\d+\/\d+$/.test(userVal)) {
         const [num, den] = userVal.split("/").map(Number);
@@ -184,7 +161,6 @@ export default function MathPage() {
         userVal = parseFloat(userVal);
       }
 
-      // --- COMPARE ---
       if (!isNaN(correctVal)) {
         checkAnswer(Math.abs(userVal - correctVal) < 0.001, correctDisplay);
       } else {
@@ -242,21 +218,22 @@ export default function MathPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 relative overflow-hidden">
-      <Dashboard />
-      <h1 className="text-4xl font-semibold mt-8 mb-2 text-emerald-300 tracking-tight">
+    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(62,125,255,0.08),_transparent_70%)] pointer-events-none" />
+
+      <h1 className="text-4xl font-semibold mt-10 mb-2 text-[#9ecbff] tracking-tight drop-shadow-[0_0_8px_rgba(62,125,255,0.3)]">
         math quest 🧮
       </h1>
 
       {!level ? (
         <div className="mt-6 text-center">
-          <p className="text-slate-400 italic mb-4">choose your level</p>
+          <p className="text-[#b8cfff]/80 italic mb-4">choose your level</p>
           <div className="flex flex-wrap justify-center gap-3">
             {[1, 2, 3, 4, 5].map((lvl) => (
               <button
                 key={lvl}
                 onClick={() => startLevel(lvl)}
-                className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg px-5 py-2 font-medium transition-all"
+                className="bg-[#1d2d50]/50 hover:bg-[#233a6e]/70 border border-[#233a6e] rounded-lg px-5 py-2 font-medium transition-all"
               >
                 Level {lvl}
               </button>
@@ -265,7 +242,7 @@ export default function MathPage() {
         </div>
       ) : (
         <>
-          <div className="mt-8 bg-white/5 border border-white/10 rounded-xl p-6 text-center w-[90%] max-w-xl shadow-[0_0_20px_rgba(0,0,0,0.4)]">
+          <div className="mt-8 bg-[#1d2d50]/40 border border-[#233a6e] rounded-xl p-6 text-center w-[90%] max-w-xl shadow-[0_0_20px_rgba(0,0,0,0.4)]">
             <p className="text-2xl font-semibold tracking-wide">{question}</p>
           </div>
 
@@ -299,11 +276,11 @@ export default function MathPage() {
             </p>
           )}
 
-          <p className="mt-6 text-slate-400 text-sm">
-            Score: <span className="text-emerald-300 font-semibold">{score}</span> / {count}
+          <p className="mt-6 text-[#b8cfff]/70 text-sm">
+            Score: <span className="text-[#9ecbff] font-semibold">{score}</span> / {count}
           </p>
 
-          <button onClick={reset} className="mt-6 text-sm text-slate-400 hover:text-emerald-300 underline">
+          <button onClick={reset} className="mt-6 text-sm text-[#b8cfff]/70 hover:text-[#9ecbff] underline">
             ← change level
           </button>
         </>
@@ -311,7 +288,7 @@ export default function MathPage() {
 
       <Link
         to="/games"
-        className="mt-12 mb-8 flex items-center gap-1 text-emerald-300/90 font-medium hover:text-emerald-300 transition-all"
+        className="mt-12 mb-8 flex items-center gap-1 text-[#9ecbff]/80 font-medium hover:text-[#9ecbff] transition-all"
       >
         ← back to games room
       </Link>

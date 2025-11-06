@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Dashboard from "../../components/dashboard/Dashboard";
 import { usePetStats } from "../../utils/stats";
+import React from "react";
 
 export default function TypingPage() {
   // === FETCH WORDS ===
@@ -14,7 +14,6 @@ export default function TypingPage() {
         .map((w) => w.word.toLowerCase())
         .filter((w) => /^[a-z]+$/.test(w));
 
-      // shuffle words
       for (let i = clean.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [clean[i], clean[j]] = [clean[j], clean[i]];
@@ -23,7 +22,18 @@ export default function TypingPage() {
       return clean.slice(0, count);
     } catch (err) {
       console.error("Datamuse failed, falling back to local list:", err);
-      const fallback = ["apple", "chair", "table", "water", "music", "plant", "light", "dream", "train", "green"];
+      const fallback = [
+        "apple",
+        "chair",
+        "table",
+        "water",
+        "music",
+        "plant",
+        "light",
+        "dream",
+        "train",
+        "green",
+      ];
       return fallback.sort(() => Math.random() - 0.5).slice(0, count);
     }
   };
@@ -157,17 +167,13 @@ export default function TypingPage() {
 
   // === RENDER ===
   return (
-    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,211,153,0.08),_transparent_70%)] pointer-events-none" />
 
-      <div className="w-full z-20">
-        <Dashboard />
-      </div>
-
-      <h1 className="text-4xl font-semibold mt-8 mb-3 text-emerald-300 drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]">
+      <h1 className="text-4xl font-semibold mt-10 mb-3 text-emerald-300 drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]">
         typing test ⌨️
       </h1>
-      <p className="text-slate-400 mb-8 italic text-sm">
+      <p className="text-[#b8cfff]/80 mb-8 italic text-sm">
         keep typing until the clock mercy-kills the round
       </p>
 
@@ -189,7 +195,7 @@ export default function TypingPage() {
       {/* === WORD STRIP === */}
       <div
         ref={containerRef}
-        className="w-[90%] max-w-3xl h-[140px] rounded-xl p-6 text-lg md:text-xl leading-relaxed tracking-wide bg-slate-800/40 border border-slate-700/60 shadow-[0_0_25px_rgba(0,0,0,0.3)] select-none overflow-x-auto whitespace-nowrap"
+        className="w-[90%] max-w-3xl h-[140px] rounded-xl p-6 text-lg md:text-xl leading-relaxed tracking-wide bg-[#1d2d50]/40 border border-[#233a6e] shadow-[0_0_25px_rgba(0,0,0,0.3)] select-none overflow-x-auto whitespace-nowrap"
         onClick={() => inputRef.current?.focus()}
         style={{ scrollbarWidth: "none" }}
       >
@@ -201,7 +207,11 @@ export default function TypingPage() {
               ? "text-white underline underline-offset-4"
               : "text-slate-400";
           return (
-            <span key={i} ref={(el) => (wordRefs.current[i] = el)} className={`${color} mx-[8px] inline-block`}>
+            <span
+              key={i}
+              ref={(el) => (wordRefs.current[i] = el)}
+              className={`${color} mx-[8px] inline-block`}
+            >
               {w}
             </span>
           );
