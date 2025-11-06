@@ -1,16 +1,28 @@
 import { useState, useEffect } from "react";
-import Dashboard from "../components/Dashboard";
 import { Link } from "react-router-dom";
+import Dashboard from "../components/dashboard/Dashboard";
 import avatarImg from "../assets/avatar.png";
 
+/**
+ * Main Inventory Hub
+ * ------------------
+ * Central place for all garden + game items.
+ * Syncs with GardenPage (mini-inventory) via localStorage.
+ */
+
 export default function InventoryPage() {
-  const inventory = JSON.parse(localStorage.getItem("inventory") || "[]");
+  // same key as garden
+  const [inventory, setInventory] = useState(
+    JSON.parse(localStorage.getItem("studyworld_inventory") || "[]")
+  );
+
   const [stats, setStats] = useState(
     JSON.parse(localStorage.getItem("petStats") || "{}")
   );
+
   const [petMood, setPetMood] = useState("happy");
 
-  // live mood updates based on stored stats
+  // mood updates
   useEffect(() => {
     const interval = setInterval(() => {
       const updatedStats = JSON.parse(localStorage.getItem("petStats") || "{}");
@@ -23,8 +35,7 @@ export default function InventoryPage() {
       else if (updatedStats.energy > 15)
         setPetMood("sleepy");
       else setPetMood("burntout");
-    }, 5000); // update every 5s to reflect background stat changes
-
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -35,29 +46,46 @@ export default function InventoryPage() {
     burntout: "🥲",
   }[petMood];
 
+  // drag start handler (for garden)
+  const handleDragStart = (e, item) => {
+    e.dataTransfer.setData("plant", item.name);
+  };
+
+  // clear all inventory (for testing)
+  const handleClear = () => {
+    if (window.confirm("Clear all inventory items?")) {
+      setInventory([]);
+      localStorage.setItem("studyworld_inventory", JSON.stringify([]));
+    }
+  };
+
+  // manually refresh inventory from storage
+  const handleRefresh = () => {
+    const inv = JSON.parse(localStorage.getItem("studyworld_inventory") || "[]");
+    setInventory(inv);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-slate-100 relative overflow-hidden">
-      {/* Background glow */}
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] text-[#d0e1ff] relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,211,153,0.06),_transparent_70%)] pointer-events-none" />
 
-      {/* Dashboard */}
+      {/* dashboard header */}
       <div className="z-20 w-full">
         <Dashboard />
       </div>
 
-      {/* Title */}
-      <h1 className="text-4xl font-semibold mt-8 mb-2 text-emerald-300 tracking-tight drop-shadow-[0_0_10px_rgba(52,211,153,0.2)]">
-        inventory
+      <h1 className="text-4xl font-semibold mt-8 mb-2 text-[#9ecbff] tracking-tight text-glow">
+        inventory hub
       </h1>
-      <p className="text-sm text-slate-400 mb-8 italic">
-        your collected items live here
+      <p className="text-sm text-[#b8cfff]/70 mb-8 italic">
+        manage your seeds, plants, and collectibles 🌿
       </p>
 
-      {/* Inventory grid */}
+      {/* layout */}
       <div className="flex flex-row items-start justify-center gap-10 w-full max-w-5xl px-6">
-        {/* Avatar and mood side panel */}
+        {/* avatar side */}
         <div className="flex flex-col items-center gap-2 sticky top-32">
-          <div className="rounded-full border-[2px] border-emerald-300/70 shadow-[0_0_25px_rgba(52,211,153,0.5)] overflow-hidden w-24 h-24 transition-all">
+          <div className="rounded-full border-[2px] border-[#9ecbff]/60 shadow-[0_0_20px_rgba(62,125,255,0.5)] overflow-hidden w-24 h-24">
             <img
               src={avatarImg}
               alt="pet avatar"
@@ -65,39 +93,79 @@ export default function InventoryPage() {
             />
           </div>
           <span className="text-3xl">{moodEmoji}</span>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#b8cfff]/80 text-center w-32">
             {petMood === "happy" && "in good spirits!"}
             {petMood === "tired" && "needs a short break"}
             {petMood === "sleepy" && "running low on energy"}
             {petMood === "burntout" && "totally exhausted..."}
           </p>
+
+          {/* quick controls */}
+          <div className="flex flex-col items-center gap-2 mt-6 text-xs text-[#9ecbff]/70">
+            <button
+              onClick={handleRefresh}
+              className="hover:text-[#9ecbff] transition"
+            >
+              🔄 refresh
+            </button>
+            <button
+              onClick={handleClear}
+              className="hover:text-red-400 transition"
+            >
+              🗑 clear all
+            </button>
+          </div>
         </div>
 
-        {/* Inventory grid proper */}
-        <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-5 z-10">
+        {/* inventory items */}
+        <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-5">
           {inventory.length === 0 ? (
-            <p className="col-span-full text-center text-slate-400 font-medium py-10 bg-slate-800/40 border border-slate-700/60 rounded-2xl backdrop-blur-sm shadow-[0_0_15px_rgba(0,0,0,0.3)]">
+            <p className="col-span-full text-center text-[#9ecbff]/70 font-medium py-10 bg-[#1d2d50]/40 border border-[#233a6e] rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.3)]">
               no items owned yet.
             </p>
           ) : (
-            inventory.map((item, index) => (
+            inventory.map((item, i) => (
               <div
-                key={index}
-                className="bg-gradient-to-br from-slate-800/70 to-slate-700/60 border border-white/10 rounded-2xl px-4 py-5 text-center font-medium text-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] hover:border-emerald-400/30 hover:scale-[1.03] transition-all"
+                key={i}
+                draggable
+                onDragStart={(e) => handleDragStart(e, item)}
+                className="bg-[#1d2d50]/60 border border-[#233a6e] rounded-2xl p-5 text-center 
+                  font-medium text-[#d0e1ff] shadow-[0_4px_20px_rgba(0,0,0,0.25)] 
+                  hover:bg-[#233a6e]/70 hover:border-[#9ecbff]/40 hover:scale-[1.03] 
+                  transition cursor-grab active:cursor-grabbing"
               >
-                {item.name}
+                <span className="text-3xl block mb-1">
+                  {item.name === "flower"
+                    ? "🌸"
+                    : item.name === "bamboo"
+                    ? "🎋"
+                    : item.name === "tree"
+                    ? "🌳"
+                    : "🪴"}
+                </span>
+                <span className="block capitalize">{item.name}</span>
+                <span className="text-sm text-[#9ecbff]/80">x{item.qty}</span>
               </div>
             ))
           )}
         </div>
       </div>
 
-      <Link
-        to="/home"
-        className="z-50 mt-12 mb-8 flex items-center gap-2 text-emerald-300/90 font-medium hover:text-emerald-300 transition-all"
-      >
-        ← back to map
-      </Link>
+      {/* navigation */}
+      <div className="flex flex-col items-center mt-10 mb-8">
+        <Link
+          to="/garden"
+          className="z-50 flex items-center gap-2 text-[#9ecbff]/80 font-medium hover:text-[#9ecbff] transition-all"
+        >
+          🌿 go to garden →
+        </Link>
+        <Link
+          to="/home"
+          className="mt-3 text-[#9ecbff]/60 text-sm hover:text-[#9ecbff] transition"
+        >
+          ← back to world
+        </Link>
+      </div>
     </div>
   );
 }

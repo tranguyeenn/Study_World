@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePetStats } from "../utils/stats";
-import Dashboard from "../components/Dashboard";
 import { Link } from "react-router-dom";
 import avatarImg from "../assets/avatar.png";
 
@@ -24,7 +23,7 @@ export default function StudyPage() {
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
-  // timer handling
+  // timer logic
   useEffect(() => {
     if (running && remaining > 0) {
       if (!studyStartTime) setStudyStartTime(Date.now());
@@ -58,7 +57,7 @@ export default function StudyPage() {
   const pause = () => {
     setRunning(false);
     setIsLockedIn(false);
-    setPetMood(getMoodFromStats(stats)); // relax back to normal mood
+    setPetMood(getMoodFromStats(stats));
   };
 
   const reset = () => {
@@ -67,7 +66,7 @@ export default function StudyPage() {
     setRemaining(duration);
     setReward(null);
     setStudyStartTime(null);
-    setPetMood(getMoodFromStats(stats)); // return to baseline mood
+    setPetMood(getMoodFromStats(stats));
   };
 
   const sessionComplete = () => {
@@ -105,10 +104,9 @@ export default function StudyPage() {
     setReward({ coins: Math.floor(coins), xp: Math.floor(xp) });
 
     setIsLockedIn(false);
-    setPetMood("happy"); // cheerful after completion
+    setPetMood("happy");
   };
 
-  // helper: baseline mood from stats
   const getMoodFromStats = (stats) => {
     if (stats.energy > 70 && stats.happiness > 70) return "happy";
     if (stats.energy > 40) return "tired";
@@ -116,7 +114,6 @@ export default function StudyPage() {
     return "burntout";
   };
 
-  // background mood adjustment if not locked
   useEffect(() => {
     if (isLockedIn) return;
     const interval = setInterval(() => {
@@ -142,21 +139,18 @@ export default function StudyPage() {
   }[petMood];
 
   return (
-    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-800 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center text-white bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] relative overflow-hidden">
+      {/* background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(79,70,229,0.1),_transparent_70%)] pointer-events-none" />
-
-      <div className="w-full z-20">
-        <Dashboard />
-      </div>
 
       <h1 className="text-4xl font-semibold mt-10 mb-2 text-indigo-300 tracking-tight drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]">
         study room
       </h1>
       <p className="text-slate-400 mb-8 italic text-sm">focus. earn. grow.</p>
 
-      {/* Layout container */}
+      {/* layout */}
       <div className="flex flex-row items-start justify-center gap-10 w-full max-w-5xl px-6">
-        {/* Pet panel */}
+        {/* pet panel */}
         <div className="flex flex-col items-center gap-2 sticky top-32">
           <div className="rounded-full border-[2px] border-indigo-300/70 shadow-[0_0_25px_rgba(129,140,248,0.5)] overflow-hidden w-24 h-24 transition-all">
             <img
@@ -169,7 +163,7 @@ export default function StudyPage() {
           <p className="text-xs text-slate-400 text-center w-28">{moodText}</p>
         </div>
 
-        {/* Timer Box */}
+        {/* timer box */}
         <div className="bg-white/10 border border-white/10 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.4)] p-8 flex flex-col items-center text-center w-[90%] max-w-md">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="flex flex-col items-center">
@@ -210,13 +204,15 @@ export default function StudyPage() {
           <div className="flex gap-4">
             <button
               onClick={start}
-              className="bg-emerald-400/90 hover:bg-emerald-300 text-slate-900 px-4 py-2 rounded-md font-semibold transition-all active:scale-[0.97]"
+              disabled={running}
+              className="bg-emerald-400/90 hover:bg-emerald-300 text-slate-900 px-4 py-2 rounded-md font-semibold transition-all active:scale-[0.97] disabled:opacity-40"
             >
               start
             </button>
             <button
               onClick={pause}
-              className="bg-amber-400/90 hover:bg-amber-300 text-slate-900 px-4 py-2 rounded-md font-semibold transition-all active:scale-[0.97]"
+              disabled={!running}
+              className="bg-amber-400/90 hover:bg-amber-300 text-slate-900 px-4 py-2 rounded-md font-semibold transition-all active:scale-[0.97] disabled:opacity-40"
             >
               pause
             </button>

@@ -3,100 +3,90 @@ import { Link } from "react-router-dom";
 
 export default function About() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-slate-100 text-center px-6 py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(99,102,241,0.08),_transparent_60%)]" />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#0a1128] via-[#1d2d50] to-[#0f1a3d] text-[#d0e1ff] text-center px-6 py-20 relative overflow-hidden">
+      {/* faint background glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,_rgba(96,165,250,0.08),_transparent_70%)]" />
 
-      {/* Header */}
+      {/* title */}
       <motion.h1
-        className="text-5xl font-semibold mb-6 text-emerald-300 tracking-tight drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
-        initial={{ opacity: 0, y: -30 }}
+        className="text-5xl font-bold mb-6 text-[#9ecbff] tracking-tight text-glow"
+        initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
       >
         StudyWorld
       </motion.h1>
 
-      {/* Tagline */}
+      {/* tagline */}
       <motion.p
-        className="text-lg text-slate-300/90 max-w-2xl mb-10 italic"
+        className="text-lg text-[#c5d9ff]/90 max-w-2xl mb-12 italic"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        built by tired students who wanted studying to feel like a game again.
+        built by sleep-deprived students who wanted learning to feel gentle again.
       </motion.p>
 
-      {/* About */}
+      {/* content */}
       <motion.div
-        className="max-w-2xl text-slate-300/90 leading-relaxed text-base space-y-8"
+        className="max-w-2xl text-[#d0e1ff]/90 leading-relaxed text-base space-y-10 text-left md:text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
         <section>
-          <h2 className="text-xl font-medium text-emerald-300 mb-2">
-            what it is
-          </h2>
+          <h2 className="text-xl font-medium text-[#9ecbff] mb-2">what it is</h2>
           <p>
-            StudyWorld is an indie web app that turns studying into a small, cozy game. 
-            you start focus sessions, earn coins for every chunk of real work you do, 
-            and use them to feed or upgrade your digital study pet. 
-            the more consistent you are, the more your world grows. 
-            it’s half productivity tracker, half gentle RPG — and 100% made by people who hate burnout.
+            StudyWorld is a tiny corner of the internet that treats focus like
+            a game instead of a punishment. you start a session, get coins for
+            actually showing up, and feed your digital plant-thing or pet so it
+            doesn’t hate you. over time your space grows — slow, quiet, yours.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-medium text-emerald-300 mb-2">
-            how it works
-          </h2>
+          <h2 className="text-xl font-medium text-[#9ecbff] mb-2">how it works</h2>
           <p>
-            you hit start, focus, and StudyWorld handles the rest. 
-            each completed session adds to your streak and earns coins. 
-            those coins unlock shop items, cosmetics, and upgrades that make your world feel alive. 
-            between sessions, you can hop into tiny word games — typing, wordle, crossword — 
-            to reset your brain without losing focus. 
-            stats, streaks, and a leaderboard keep you grounded but not pressured.
+            press start. breathe. do your thing. StudyWorld tracks the time and
+            drops coins when you finish. you can spend them on small upgrades,
+            tiny decorations, or just to pretend you have your life together.
+            between study streaks, you can play short word games that reset your
+            brain without feeding your doomscroll habit.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-medium text-emerald-300 mb-2">
-            why we built it
-          </h2>
+          <h2 className="text-xl font-medium text-[#9ecbff] mb-2">why we made it</h2>
           <p>
-            the internet turned learning into a race. 
-            We wanted a slower lane — a place where showing up counts more than speed. 
-            StudyWorld rewards small effort, not endless grind. 
-            It’s for students, artists, and anyone trying to rebuild their attention span one study session at a time.
+            the internet turned learning into a leaderboard. we missed the part
+            where curiosity was allowed to be slow. StudyWorld isn’t about
+            grinding — it’s about showing up, even if all you did was stare at
+            a paragraph for twenty minutes and finally get it.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-medium text-emerald-300 mb-2">
-            who made it
-          </h2>
+          <h2 className="text-xl font-medium text-[#9ecbff] mb-2">who built it</h2>
           <p>
-            a few students with too much caffeine and not enough discipline. 
-            We coded, designed, and broke this thing until it started working. 
-            It’s not a corporation — it’s a passion project. 
-            Every line of code was written between classes and late-night playlists.
+            a few students with questionable sleep schedules, too much coffee,
+            and a need to build something soft in a loud world. we’re not a
+            startup. just people who wanted a place to log off without leaving.
           </p>
         </section>
       </motion.div>
 
-      {/* Enter World Button */}
+      {/* back button */}
       <motion.div
-        className="mt-14"
+        className="mt-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
         <Link
           to="/home"
-          className="flex items-center gap-2 bg-white/10 border border-white/20 text-slate-100 font-medium px-6 py-2 rounded-xl hover:bg-white/20 transition-all backdrop-blur-sm"
+          className="flex items-center gap-2 bg-[#1d2d50]/60 border border-[#233a6e] text-[#d0e1ff] font-medium px-6 py-2 rounded-xl hover:bg-[#233a6e]/70 transition-all backdrop-blur-sm"
         >
-          <span className="text-emerald-300">←</span> enter world
+          <span className="text-[#9ecbff]">←</span> back to the world
         </Link>
       </motion.div>
     </div>

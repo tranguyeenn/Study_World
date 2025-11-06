@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { evaluate, derivative, simplify, fraction } from "mathjs";
-import Dashboard from "../../components/Dashboard";
+import Dashboard from "../../components/dashboard/Dashboard";
 import { usePetStats } from "../../utils/stats";
 
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

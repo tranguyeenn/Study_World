@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Dashboard from "../../components/Dashboard";
+import Dashboard from "../../components/dashboard/Dashboard";
 import { usePetStats } from "../../utils/stats";
 
 export default function TypingPage() {

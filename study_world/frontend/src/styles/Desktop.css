@@ -1,0 +1,52 @@
+/* === Desktop Layout Styling (used in Desktop.jsx) === */
+
+.desktop {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #0a1128;
+  color: #d0e1ff;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.desktop header {
+  background-color: rgba(29, 45, 80, 0.7);
+  border-bottom: 1px solid #1d2d50;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.desktop nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  border-bottom: 1px solid #1d2d50;
+  padding: 0.5rem;
+}
+
+.desktop nav button {
+  color: #d0e1ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.desktop nav button:hover {
+  color: #9ecbff;
+}
+
+.desktop main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.desktop footer {
+  border-top: 1px solid #1d2d50;
+  background-color: rgba(29, 45, 80, 0.4);
+  text-align: center;
+  padding: 0.5rem;
+}

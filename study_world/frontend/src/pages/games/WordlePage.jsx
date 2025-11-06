@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Dashboard from "../../components/Dashboard"; // keep your pet stats bar!
+import Dashboard from "../../components/dashboard/Dashboard";
 
 // === FETCH RANDOM 5-LETTER WORD FROM DATAMUSE ===
 const fetchWord = async () => {
