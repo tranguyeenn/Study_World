@@ -58,15 +58,18 @@ export default function Desktop({ children }) {
 
       {/* === Navigation tabs === */}
       <nav className="flex justify-center gap-6 border-b border-[#1d2d50] py-2 text-sm">
-        {["Study", "Games", "Garden", "Comm", "Profile"].map((tab) => (
-          <button
-            key={tab}
-            className="hover:text-[#9ecbff] transition"
-            onClick={() => (window.location.href = `/${tab.toLowerCase()}`)}
-          >
-            [{tab}]
-          </button>
-        ))}
+        {["Study", "Games", "Garden", "Shop", "Inv", "Comm", "Profile"].map((tab) => {
+          const path = tab === "Inv" ? "inventory" : tab.toLowerCase();
+          return (
+            <button
+              key={tab}
+              className="hover:text-[#9ecbff] transition"
+              onClick={() => (window.location.href = `/${path}`)}
+            >
+              [{tab}]
+            </button>
+          );
+        })}
       </nav>
 
       {/* === Main area === */}
@@ -98,7 +101,7 @@ export default function Desktop({ children }) {
         </div>
       </main>
 
-      {/* === Bottom taskbar === */}
+      {/* === Bottom taskbar (keep it) === */}
       <Taskbar />
 
       {/* === Global Notifications === */}
@@ -106,3 +109,4 @@ export default function Desktop({ children }) {
     </div>
   );
 }
+

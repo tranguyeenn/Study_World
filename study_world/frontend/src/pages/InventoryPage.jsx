@@ -1,39 +1,33 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Dashboard from "../components/dashboard/Dashboard";
 import avatarImg from "../assets/avatar.png";
+import React from "react";
 
 /**
- * Main Inventory Hub
- * ------------------
- * Central place for all garden + game items.
+ * Inventory Hub
+ * --------------
+ * Central collection for all user items (garden + rewards).
  * Syncs with GardenPage (mini-inventory) via localStorage.
  */
 
 export default function InventoryPage() {
-  // same key as garden
   const [inventory, setInventory] = useState(
     JSON.parse(localStorage.getItem("studyworld_inventory") || "[]")
   );
-
   const [stats, setStats] = useState(
     JSON.parse(localStorage.getItem("petStats") || "{}")
   );
-
   const [petMood, setPetMood] = useState("happy");
 
-  // mood updates
+  // Update pet mood based on stats
   useEffect(() => {
     const interval = setInterval(() => {
       const updatedStats = JSON.parse(localStorage.getItem("petStats") || "{}");
       setStats(updatedStats);
 
-      if (updatedStats.energy > 70 && updatedStats.happiness > 70)
-        setPetMood("happy");
-      else if (updatedStats.energy > 40)
-        setPetMood("tired");
-      else if (updatedStats.energy > 15)
-        setPetMood("sleepy");
+      if (updatedStats.energy > 70 && updatedStats.happiness > 70) setPetMood("happy");
+      else if (updatedStats.energy > 40) setPetMood("tired");
+      else if (updatedStats.energy > 15) setPetMood("sleepy");
       else setPetMood("burntout");
     }, 4000);
     return () => clearInterval(interval);
@@ -46,12 +40,12 @@ export default function InventoryPage() {
     burntout: "🥲",
   }[petMood];
 
-  // drag start handler (for garden)
+  // Drag item (for garden planting)
   const handleDragStart = (e, item) => {
     e.dataTransfer.setData("plant", item.name);
   };
 
-  // clear all inventory (for testing)
+  // Clear all inventory
   const handleClear = () => {
     if (window.confirm("Clear all inventory items?")) {
       setInventory([]);
@@ -59,7 +53,7 @@ export default function InventoryPage() {
     }
   };
 
-  // manually refresh inventory from storage
+  // Refresh inventory
   const handleRefresh = () => {
     const inv = JSON.parse(localStorage.getItem("studyworld_inventory") || "[]");
     setInventory(inv);
@@ -69,12 +63,8 @@ export default function InventoryPage() {
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-[#0a1128] via-[#0d1b3a] to-[#0a1128] text-[#d0e1ff] relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,211,153,0.06),_transparent_70%)] pointer-events-none" />
 
-      {/* dashboard header */}
-      <div className="z-20 w-full">
-        <Dashboard />
-      </div>
-
-      <h1 className="text-4xl font-semibold mt-8 mb-2 text-[#9ecbff] tracking-tight text-glow">
+      {/* page header */}
+      <h1 className="text-4xl font-semibold mt-10 mb-2 text-[#9ecbff] tracking-tight">
         inventory hub
       </h1>
       <p className="text-sm text-[#b8cfff]/70 mb-8 italic">
@@ -83,7 +73,7 @@ export default function InventoryPage() {
 
       {/* layout */}
       <div className="flex flex-row items-start justify-center gap-10 w-full max-w-5xl px-6">
-        {/* avatar side */}
+        {/* avatar & mood */}
         <div className="flex flex-col items-center gap-2 sticky top-32">
           <div className="rounded-full border-[2px] border-[#9ecbff]/60 shadow-[0_0_20px_rgba(62,125,255,0.5)] overflow-hidden w-24 h-24">
             <img
@@ -100,24 +90,18 @@ export default function InventoryPage() {
             {petMood === "burntout" && "totally exhausted..."}
           </p>
 
-          {/* quick controls */}
+          {/* quick actions */}
           <div className="flex flex-col items-center gap-2 mt-6 text-xs text-[#9ecbff]/70">
-            <button
-              onClick={handleRefresh}
-              className="hover:text-[#9ecbff] transition"
-            >
+            <button onClick={handleRefresh} className="hover:text-[#9ecbff] transition">
               🔄 refresh
             </button>
-            <button
-              onClick={handleClear}
-              className="hover:text-red-400 transition"
-            >
+            <button onClick={handleClear} className="hover:text-red-400 transition">
               🗑 clear all
             </button>
           </div>
         </div>
 
-        {/* inventory items */}
+        {/* item grid */}
         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-5">
           {inventory.length === 0 ? (
             <p className="col-span-full text-center text-[#9ecbff]/70 font-medium py-10 bg-[#1d2d50]/40 border border-[#233a6e] rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.3)]">
@@ -151,7 +135,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* navigation */}
+      {/* nav links */}
       <div className="flex flex-col items-center mt-10 mb-8">
         <Link
           to="/garden"

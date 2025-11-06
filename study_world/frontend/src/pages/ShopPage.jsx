@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { usePetStats } from "../utils/stats";
-import Dashboard from "../components/dashboard/Dashboard";
 import { Link } from "react-router-dom";
 import avatarImg from "../assets/avatar.png";
+import React from "react";
 
 export default function ShopPage() {
   const [stats, setStats] = usePetStats();
@@ -37,7 +37,6 @@ export default function ShopPage() {
 
   const handleBuy = (item) => {
     if (stats.coins >= item.price) {
-      // Deduct coins & boost happiness a bit
       const updated = {
         ...stats,
         coins: stats.coins - item.price,
@@ -51,7 +50,6 @@ export default function ShopPage() {
       inv.push(item);
       localStorage.setItem("inventory", JSON.stringify(inv));
 
-      // Feedback message
       setMessage(`🛍️ bought ${item.name}! (+5 happiness)`);
     } else {
       setMessage("❌ not enough coins...");
@@ -64,13 +62,8 @@ export default function ShopPage() {
       {/* blue glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(79,70,229,0.08),_transparent_70%)] pointer-events-none" />
 
-      {/* top bar */}
-      <div className="w-full z-20">
-        <Dashboard />
-      </div>
-
       {/* title */}
-      <h1 className="text-4xl font-semibold mt-8 mb-2 text-indigo-300 tracking-tight drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]">
+      <h1 className="text-4xl font-semibold mt-10 mb-2 text-indigo-300 tracking-tight drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]">
         shop
       </h1>
       <p className="text-slate-400 mb-8 italic text-sm">
