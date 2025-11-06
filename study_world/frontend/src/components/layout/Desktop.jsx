@@ -17,7 +17,10 @@ import NotificationManager from "../ui/NotificationManager";
  */
 export default function Desktop({ children }) {
   const [time, setTime] = useState("");
-  const [showPanel, setShowPanel] = useState(true);
+  const [showPanel, setShowPanel] = useState(() => {
+    const saved = localStorage.getItem("sidePanelCollapsed");
+    return saved ? JSON.parse(saved) : true; // default: visible
+  });
 
   // live clock
   useEffect(() => {
@@ -28,19 +31,20 @@ export default function Desktop({ children }) {
     return () => clearInterval(clock);
   }, []);
 
-  // read saved xp & coins
-  const stats = JSON.parse(localStorage.getItem("petStats") || "{}");
-  const xp = stats.xp ?? 0;
-  const coins = stats.coins ?? 0;
+  // persist sidebar state
+  useEffect(() => {
+    localStorage.setItem("sidePanelCollapsed", JSON.stringify(showPanel));
+  }, [showPanel]);
+
+  // safely read xp & coins (default 0)
+  const { xp = 0, coins = 0 } = JSON.parse(localStorage.getItem("petStats") || "{}");
 
   return (
     <div className="flex flex-col h-screen bg-[#0a1128] text-[#d0e1ff] font-mono relative">
       {/* === Top bar === */}
       <header className="flex justify-between items-center px-4 py-2 border-b border-[#1d2d50] bg-[#1d2d50]/70 shadow-md">
-        {/* left: app name */}
         <span className="font-bold text-lg">StudyWorld OS</span>
 
-        {/* center: coins + xp */}
         <div className="flex gap-4 text-sm items-center">
           <span className="flex items-center gap-1">
             <span className="text-emerald-400">💰</span>
@@ -52,7 +56,6 @@ export default function Desktop({ children }) {
           </span>
         </div>
 
-        {/* right: clock */}
         <span className="text-sm opacity-80">🕒 {time}</span>
       </header>
 
@@ -101,12 +104,11 @@ export default function Desktop({ children }) {
         </div>
       </main>
 
-      {/* === Bottom taskbar (keep it) === */}
+      {/* === Bottom taskbar === */}
       <Taskbar />
 
-      {/* === Global Notifications === */}
+      {/* === Notifications === */}
       <NotificationManager />
     </div>
   );
 }
-
