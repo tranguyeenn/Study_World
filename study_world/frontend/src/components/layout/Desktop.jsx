@@ -43,7 +43,6 @@ export default function Desktop({ children }) {
     { name: "Garden", path: "garden" },
     { name: "Shop", path: "shop" },
     { name: "Inv", path: "inventory" },
-    { name: "Comm", path: "comm" },
   ];
 
   // bottom system menu
